@@ -4,29 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Academic Homepage">
-    <meta name="keywords" content="Computer Science, PhD Student, Research, Machine Learning, Robotics">
+    <meta name="keywords" content="ECE, PhD Student, Research, Reinforcement Learning, Robotics">
     <meta name="author" content="Anonymous">
     <meta property="og:title" content="Academic Homepage - PhD Student">
-    <meta property="og:description" content="Research in computer science and related fields.">
+    <meta property="og:description" content="Robotics research in control of hybrid systems.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="#">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:creator" content="@anonymous">
-    <title>Academic Homepage</title>
+    <title>Leroy D'Souza</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;500;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles_temp.css">
 </head>
 <body id="top">
     <header>
         <div class="header-content">
-            <h1>[Name]</h1>
-            <p>CS PhD Student • [University]</p>
+            <h1>Leroy D'Souza</h1>
+            <p>PhD Candidate • <a href="https://uwaterloo.ca/electrical-computer-engineering/">Electrical and Computer Engineering, University of Waterloo</a></p>
             <div class="social-links-header">
-                <a href="#"><i class="fas fa-graduation-cap"></i>Google Scholar</a>
-                <a href="#"><i class="fab fa-twitter"></i>Twitter</a>
-                <a href="#"><i class="fab fa-github"></i>GitHub</a>
-                <a href="mailto:email@university.edu"><i class="fas fa-envelope"></i>Email</a>
+                <a href="https://scholar.google.ca/citations?user=JwA24FoAAAAJ&hl=en"><i class="fas fa-graduation-cap"></i>Google Scholar</a>
+                <a href="https://www.linkedin.com/in/leroy-dsouza-350493157/"><i class="fab fa-linkedin-in"></i>LinkedIn</a>
+                <!-- <a href="#"><i class="fab fa-twitter"></i>Twitter</a> -->
+                <!-- <a href="#"><i class="fab fa-github"></i>GitHub</a> -->
+                <a href="mailto:l8dsouza@uwaterloo.ca"><i class="fas fa-envelope"></i>Email</a>
             </div>
         </div>
         <div class="header-image">
@@ -36,10 +38,25 @@
 
     <main>
         <section id="about">
-            <p>Hi! I am a PhD student in Computer Science at [University], advised by <a href="#">[Advisor]</a>.</p>
+            <p>
+            I am a PhD candidate in the Control, Logic, and Learning (CL2) Lab
+            at the University of Waterloo in the Department of Electrical and Computer Engineering, 
+            co-supervised by <a href="https://yashpant.github.io/">Prof. Yash Pant</a> and 
+            <a href="https://uwaterloo.ca/embedded-software-group/people-profiles/sebastian-fischmeister">Prof. Sebastian Fischmeister</a>.
+            My research focuses on the design of controllers for hybrid (switched) systems, with an emphasis on data-driven and learning-based methods.
+            </p>
+
+            <p>
+            My <a href="https://uwspace.uwaterloo.ca/items/b76b4e05-d5ea-4419-8857-9b52685a3ed7">MASc thesis</a> in ECE at UW investigated learning Gaussian process models for use in mixed-integer optimization-based model predictive control. 
+            My current work builds on advances in model-free reinforcement learning to address the challenges posed by 
+            multi-modal dynamics governed by latent variables and the scalability of hybrid system control to high-dimensional state spaces. 
+            Broadly, my research interests span model-free RL, game-theoretic approaches to decision making, 
+            and generative modeling techniques for learning expressive and adaptable control policies, 
+            particularly in environments with uncertainty and limited prior knowledge.
+            </p>
         </section>
 
-        <section id="research">
+        <!-- <section id="research">
             <h2>Research</h2>
             <p>My research focuses on <strong>[Research Area 1] and [Research Area 2]</strong>. My recent works explore:</p>
             <ul>
@@ -48,9 +65,73 @@
                 <li>[Research Topic 3] (<a href="#">[Conference 7]'24</a>, <a href="#">[Conference 8]'23</a>, <a href="#">[Conference 9]'23</a>)</li>
                 <li>[Research Topic 4] (<a href="#">[Journal 1]'22</a>, <a href="#">[Journal 2]'21</a>)</li>
             </ul>
-        </section>
+        </section> -->
 
-        <section id="news">
+    <section class="research-list">
+    <h2>Research</h2>
+
+    <article class="research-item" aria-labelledby="moediff-title">
+        <video class="autoplay no-controls" preload="metadata" width="230" height="330" alt="MoE-Diff control on unseen racetrack layout"
+        autoplay muted loop playsinline aria-describedby="moediff-caption">
+            <source src="videos/moediff_website_teaser.mp4" type="video/mp4">
+            <!-- Fallback -->
+            Sorry, your browser doesn’t support embedded videos. 
+        </video>
+        <div class="research-body">
+        <h3 class="research-title" id="moediff-title">
+            Learning Adaptive Diffusion Policies for Hybrid Dynamical Systems
+        </h3>
+
+        <p class="research-authors">
+            Leroy D'Souza*,
+            <a href="https://aku02.github.io/">Akash Karthikeyan*</a>, <a href="https://yashpant.github.io/">Yash Vardhan Pant</a>,
+            <a href="https://uwaterloo.ca/embedded-software-group/people-profiles/sebastian-fischmeister">Sebastian Fischmeister</a>
+        </p>
+
+        <div class="research-venue">IJCAI 2025 Workshop on User-Aligned Assessment of Adaptive AI Systems</div>
+
+        <div class="badges">
+            <a class="badge" href="https://aku02.github.io/projects/moediff/">Project Page</a>
+            <a class="badge" href="https://aair-lab.github.io/aia2025/slides/leroy_dsouza_aia25_poster.pdf">Poster</a>
+        </div>
+
+        <p class="research-abstract">
+            An MoE-based energy-diffusion actor model for adaptable and generalizable control for systems with multi-modal dynamics. The video shows MoE-Diff controlling an autonomous racecar on an unseen racetrack layout with changing friction coefficients.
+        </p>
+        </div>
+    </article>
+
+    <article class="research-item" aria-labelledby="tractgpmpchyb-title">
+        <img src="images/final_mapping_demo.png" width="225" height="150" style="margin-top: 50px;" alt="Data-driven hybrid GP-MPC over changing environments with learned mapping" loading="lazy">
+        <div class="research-body">
+        <h3 class="research-title" id="tractgpmpchyb-title">
+            Tractable Stochastic Hybrid Model Predictive Control using Gaussian Processes for Repetitive Tasks in Unseen Environments
+        </h3>
+
+        <p class="research-authors">
+            Leroy D'Souza, <a href="https://yashpant.github.io/">Yash Vardhan Pant</a>,
+            <a href="https://uwaterloo.ca/embedded-software-group/people-profiles/sebastian-fischmeister">Sebastian Fischmeister</a>
+        </p>
+
+        <div class="research-venue">European Control Conference (ECC), 2025</div>
+
+        <div class="badges">
+            <a class="badge" href="https://drive.google.com/file/d/1ZX0IzwwC2fRWfCR4l_InpHI_1Ty3-ZRP/view?usp=sharing">Paper</a>
+            <a class="badge" href="https://github.com/CL2-UWaterloo/AdaptiveHGPMPC_ECC25">Code</a>
+        </div>
+
+        <p class="research-abstract">
+            This work deals with chance-constrained model predictive control (MPC) for stochastic hybrid systems in environments where the switching locations are unknown apriori and can change over time. 
+            We build a mapping approach that iteratively improves performance in repetitive task settings and is capable of accounting for temporally changing mode distributions.
+        </p>
+        </div>
+    </article>
+
+
+
+    </section>
+
+        <!-- <section id="news">
             <h2>News</h2>
             <div class="news-container">
                 <ul class="news-list">
@@ -66,19 +147,19 @@
                     <li>[MM/YYYY]: [News Item 10]</li>
                 </ul>
             </div>
-        </section>
+        </section> -->
 
-        <section id="publications">
+        <!-- <section id="publications">
             <div class="publications-header">
                 <h2 id="toggle-header">Selected Publications</h2>
                 <button id="toggle-publications" class="toggle-publications">Show All</button>
             </div>
-            <div id="publications-container">
+            <div id="publications-container"> -->
                 <!-- Publications will be dynamically loaded here -->
-            </div>
-        </section>
+            <!-- </div>
+        </section> -->
 
-        <section id="awards">
+        <!-- <section id="awards">
             <h2>Awards</h2>
             <div class="award-item">
                 <span class="award-year">[YYYY]</span>
@@ -104,9 +185,9 @@
                 <span class="award-year">[YYYY]</span>
                 <div class="award-desc">[Award 6]</div>
             </div>
-        </section>
+        </section> -->
 
-        <section id="services">
+        <!-- <section id="services">
             <h2>Services</h2>
             <div class="service-category">
                 <div class="service-title">Reviewer</div>
@@ -122,18 +203,18 @@
                 <div class="service-title">Volunteer</div>
                 <p>[Role 1], [Role 2], [Role 3]</p>
             </div>
-        </section>
+        </section> -->
 
-        <section id="miscellaneous">
+        <!-- <section id="miscellaneous">
             <h2>Miscellaneous</h2>
             <div class="misc-item">
                 <p>[Optional] Share your hobbies and interests here.</p>
             </div>
-        </section>
+        </section> -->
     </main>
 
     <footer>
-        <p>Last updated: [Month YYYY]. Design and source code from <a href="https://cs.stanford.edu/~yuhuiz/">Yuhui Zhang's website</a>.</p>
+        <p>Last updated: [August 2025]. Design and source code from <a href="https://cs.stanford.edu/~yuhuiz/">Yuhui Zhang's website</a>.</p>
     </footer>
 
     <div id="imageModal" class="modal">
