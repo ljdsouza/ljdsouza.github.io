@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SAC-MoE: Reinforcement Learning with Mixture-of-Experts for Control of Hybrid Dynamical Systems with Uncertainty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- MathJax for LaTeX rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        processEscapes: true,
+        packages: {'[+]': ['ams']}
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --text: #1f2328;
+      --accent: #0b3d91;
+      --bg: #fafafa;
+      --card: #ffffff;
+    }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6; }
+    main { max-width: 980px; margin: 0 auto; padding: 1.25rem; }
+    h1 { font-size: 1.9rem; margin: 1.2rem 0 0.8rem; color: var(--accent); }
+    h2 { font-size: 1.5rem; margin: 1.3rem 0 0.6rem; color: var(--accent); }
+    h3, h4 { color: var(--accent); margin-top: 1rem; }
+    p { margin: 0.5rem 0; text-align: justify; }
+    ul { margin: 0.5rem 1.2rem; }
+    /* Keep card feel but minimal to avoid shifting */
+    section { background: var(--card); border-radius: 12px; padding: 1.1rem; margin: 1rem 0; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+
+    /* Preserve your original Markdown layout semantics */
+    .center { text-align: center; }
+
+    /* Media sizing — identical semantics to your widths */
+    img, video {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 8px;
+      /* very light shadow; reduce flicker/paint artifacts */
+      box-shadow: 0 0.5px 3px rgba(0,0,0,0.08);
+      margin: 0.25rem;
+      object-fit: contain;
+    }
+    .w45 { width: 45%; }
+    .w31 { width: 31%; }
+    .w80 { width: 80%; }
+
+    /* Make rows behave like your <p align="center"> blocks */
+    .row { text-align: center; }
+    /* Ensure videos auto-play inline consistently */
+    video { background: #000; }
+
+    /* Math blocks spacing */
+    .math-block { margin: 0.75rem 0; }
+
+    @media (max-width: 860px) {
+      .w45, .w31, .w80 { width: 95%; }
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <h1>SAC-MoE: Reinforcement Learning with Mixture-of-Experts for Control of Hybrid Dynamical Systems with Uncertainty</h1>
+
+    <a class="badge" href="https://aku02.github.io/projects/moediff/">Paper (pre-print)</a>
+    <br/>
+    <a class="badge" href="https://aku02.github.io/projects/moediff/">Codebase</a>
+
+  <h2>Overview of hybrid systems and their challenges</h2>
+
+  <p class="center row">
+    <img src="data/gifs/ICRA_website_intro_i.png" class="w45" />
+    <img src="data/gifs/ICRA_website_intro_ii.png" class="w45" style="clip-path: inset(0% 0% 0% 0%);" />
+  </p>
+
+  <h4>Hybrid Systems</h4>
+  <p>
+    Hybrid systems combine <b><i>continuous</i></b> dynamics models with <b><i>discrete</i></b> event processes. For example, different surfaces (e.g., asphalt, gravel, slippery) induce different dynamics in an autonomous racing vehicle driving on a racetrack. Each of these dynamics models is called a mode and the environment (partially or completely) governs the discrete events that result in <b><i>switching</i></b> between these different modes.
+  </p>
+
+  <h4>Our problem statement</h4>
+  <p>
+    In our work, i) the parameters that affect mode dynamics (e.g., friction coefficient, aerodynamic parameters) and ii) the environment processes that contribute to switching between different modes are <b><i>unobservable</i></b>.
+  </p>
+
+  <h4>Our solution (SAC-MoE)</h4>
+  <p class="center row">
+    <!-- GIF -> MP4 -->
+    <video src="data/mp4s/sacmoe_site_intro.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <p>
+    Controllers fail to control hybrid systems if they do not account for abrupt switching between different dynamics modes. We propose SAC-MoE that addresses the problem statement by learning to adaptively compose behaviors across learned experts to account for differing mode dynamics and discrete switching.
+  </p>
+
+  <h2>Motivating SAC-MoE by investigating switching policies</h2>
+
+  <p>
+    A simple control solution that immediately comes to mind for such systems would be to switch between optimal policies specific to different modes. This section shows the pitfalls of using such an approach and discusses why these arise.
+  </p>
+
+    <h4>Hybrid system under consideration</h4>
+    <p>
+    We use a perturbed kinematic bicycle model for this test with dynamics with i) state
+    \( s=(x,y,\theta,v) \) where \( \theta \) is the heading angle and \( v \) is the speed and ii) control
+    \( a=(\psi, a_{\text{long}}) \) where \( \psi \) is the steering angle and \( a_{\text{long}} \) is the longitudinal
+    acceleration. The pertubation terms are parametrized by a latent mode parameter,
+    \( \mu \) which takes values in \( \{0, 6\} \).
+    </p>
+
+    <div class="math-block">
+    \[
+    \begin{aligned}
+    \dot{x} &= v \cos(\theta) \\
+    \dot{y} &= v \sin(\theta) \\
+    \dot{\theta} &= \frac{v}{L} \tan(\psi) + \dot{\theta}_{\text{perturb}} \\
+    \dot{v} &= a_{\text{long}} + \dot{v}_{\text{perturb}} \\
+    \dot{\theta}_{\text{perturb}} &= -\bigl(0.05\, e^{\psi} + 0.15\, a_{\text{long}} \tanh(\theta)\bigr)\,\mu \\
+    \dot{v}_{\text{perturb}} &= -\bigl(0.1\, a_{\text{long}} \cos(\theta) + 0.3\, v\, \sin(\psi)\bigr)\,\mu
+    \end{aligned}
+    \]
+    </div>
+
+
+  <h4>Visualizing optimal mode-specific policies</h4>
+    <p>
+    We first compare the behaviors generated by two policies
+    \( \pi_{1} \) and \( \pi_{2} \) that are optimal for
+    \( \mu = 0 \) and \( \mu = 6 \) respectively.
+    Clearly, for the same initial point, the action sequence and state trajectory
+    are very different over the episode.
+    </p>
+
+  <p class="center row">
+    <video class="w45" src="data/mp4s/Unimodal_0_website.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+    <video class="w45" src="data/mp4s/Unimodal_6_website.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+  </p>
+
+  <h4>Discrete switching between optimal policies</h4>
+<p>
+  We now consider an environment which switches between different modes based on the position in the workspace.
+  The switching policy picks Policy 1 if \( \mu = 0 \) defines the mode at the current position and
+  alternatively picks Policy 2 if \( \mu = 6 \) defines the mode (assuming an oracle tells us the current value of \( \mu \)).
+  Below we see that the switching policy switches between conflicting policies abruptly, resulting in a myopic controller.
+  It generates suboptimal trajectories that fail to reach the goal and can even get stuck at mode switching boundaries.
+</p>
+
+
+  <p class="center row">
+    <video class="w31" src="data/mp4s/switch_demo_1_website.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+    <video class="w31" src="data/mp4s/switch_demo_2_website.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+    <video class="w31" src="data/mp4s/switch_demo_3_website.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+  </p>
+
+  <h4>Takeaways</h4>
+  <p>
+    These challenges motivate the use of an architecture that retains the benefits of switching policies while addressing their shortcomings. We highlight the similarities and differences between our proposed approach (SAC-MoE) and switching policies further in the paper.
+  </p>
+
+  <h2>Motivating adaptive curriculum approaches</h2>
+
+  <p>
+    Some hybrid environments can have mode switching behavior that makes learning an effective control policy significantly harder than other hybrid environments. We demonstrate this point below.
+  </p>
+
+  <p class="center row">
+    <video class="w45" src="data/mp4s/modeloc_comp_currmotiv.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+    <video class="w45" src="data/mp4s/modeset_comp_currmotiv.mp4" autoplay loop muted playsinline style="clip-path: inset(0% 0% 0% 0%);"></video>
+  </p>
+
+  <p>
+    The paper discusses how prior work with contextual MDPs uses random context sampling for training. Below, we show the effects of training with an adaptive curriculum that learns to prioritize data collection in "harder" training environments by comparing three policies (SAC, SAC-UPTrue baselines and our proposed SAC-MoE) each trained separately using a random curriculum (RC) and adaptive curriculum (AC).
+  </p>
+
+  <h4>Visualizing results in easier environments</h4>
+  <p>We first visualize policy behaviors in a relatively easy high friction environment without any mode switching. We observe that the RC-trained policies are slightly faster than the AC-trained policies across all models.</p>
+  <p class="center row">
+    <video class="w31" src="data/mp4s/easy_sac.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/easy_uptrue.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/easy_sacmoe.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <h4>Visualizing results in harder environments</h4>
+  <p>We now test if the success of the RC-trained policies from above generalizes to harder environments with more challenging surfaces and abrupt mode switches.</p>
+  <p class="center row">
+    <video class="w31" src="data/mp4s/medium_sac.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/medium_uptrue.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/medium_sacmoe.mp4" autoplay loop muted playsinline></video>
+  </p>
+  <p class="center row">
+    <video class="w31" src="data/mp4s/hard_sac.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/hard_uptrue.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/hard_sacmoe.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <h4>Takeaways</h4>
+  <p>We observe that the adaptive curriculum does significantly better across all models which</p>
+  <ul>
+    <li>Validates that different environments have varying difficulty levels which requires learning policies that can generalize to diverse hybrid environments.</li>
+    <li>Demonstrates the importance of using an adaptive curriculum to avoid overfitting to the easiest environments and ignoring performance on harder environments.</li>
+  </ul>
+
+  <h2>Demonstrating SAC-MoE's performance improvements</h2>
+  <p>
+    Considering that the adaptive curriculum generates performance improvements across all policies, the results we show henceforth are assumed to use that training approach. The training and evaluation tracks are shown below (each box of a specific color can be assigned its own mode). The videos compare an oracle baseline that obtains ground-truth mode information (SAC-UPTrue) against our proposed approach (SAC-MoE).
+  </p>
+
+  <p class="center row">
+    <img src="data/gifs/train_eval_tracks.png" class="w80" />
+  </p>
+
+  <h4>Results on the original track layout (Track 1 evaluation)</h4>
+  <p>
+    We first compare policies on the original track layout but using environments with modes and mode switching that <i><b>were never observed during training</b></i>. We observe that SAC-MoE consistently covers more of the track than SAC-UPTrue <i>despite not knowing the mode parameter active at the current timestep</i> and exhibits an understanding of how to brake at crucial parts of the track to account for mode switching and prevent crashes while still achieving fast laptimes.
+  </p>
+
+  <p class="center row">
+    <video src="data/mp4s/2surf_site_moeuptrue.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <p class="center row">
+    <video src="data/mp4s/3surf_site_moeuptrue.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <h4>Results on the unseen track layout (Track 2 evaluation)</h4>
+  <p>
+    We now compare policies on an unseen track layout. Once again we observe that SAC-MoE does significantly better than the oracle baseline and demonstrates a better understanding of the occupancy grid observation and how it must be incorporated into the control policy to generate behaviors across mode switches that prevent crashing.
+  </p>
+
+  <p class="center row">
+    <video src="data/mp4s/2surf_site_moeuptrue_unseen.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <p class="center row">
+    <video src="data/mp4s/3surf_site_moeuptrue_unseen.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <h4>Takeaways</h4>
+  <p>SAC-MoE consistently outperforms the baselines we compare against across a variety of zero-shot generalization tasks that encompass unseen track layouts, unseen modes of the autonomous vehicle dynamics and unseen mode switches, while not receiving explicit information about these latent parameters.</p>
+
+
+  <h2>Demonstrating SAC-MoE benefits on legged locomotion (Walker2D)</h2>
+
+  <h4>Comparing performance against oracle policy (SAC-UPTrue)</h4>
+  <p>
+    Similar to the racetrack results, we observe the SAC-MoE outperforms the oracle baseline and consistently achieves good performance across diverse hybrid environments.
+  </p>
+
+  <p>
+    We visualize the torso angle trajectories generated by both policies across the environments since this variable is crucial to determining whether the system becomes unstable. We observe that SAC-MoE's policy tries to match a reference torso angle trajectory generated by a policy that was trained and tested on a single mode (high friction), demonstrating its ability to stabilize the system even under abrupt, drastic mode switching.
+  </p>
+
+  <p class="center row">
+    <video class="w31" src="data/mp4s/walker_torso_angle_1p0.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/walker_torso_angle_0p3.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/walker_torso_angle_0p05.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <p class="center row">
+    <video class="w31" src="data/mp4s/walker_torso_angle_1p0_0p5.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/walker_torso_angle_0p1_1p0.mp4" autoplay loop muted playsinline></video>
+    <video class="w31" src="data/mp4s/walker_torso_angle_0p05_0p5.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <h4>Visualizing how the router composes learned experts across different contexts</h4>
+  <p>From the videos below, it is clear that SAC-MoE yields similar state trajectories on modes with similar mode parameters and distinct trajectories across dissimilar modes.</p>
+  <p class="center row">
+    <video class="w45" src="data/mp4s/walker_qual_similar.mp4" autoplay loop muted playsinline></video>
+    <video class="w45" src="data/mp4s/walker_qual_dissimilar.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+  <p>
+    We further demonstrate this using a tSNE plot of the states collected across an episode for each different context. It is clear that the tSNE distribution for dissimilar modes have peaks in distinct locations, in contrast to similar modes.
+  </p>
+
+  <p class="center row">
+    <img src="data/gifs/tsne2d_states_by_file_kde_marginals_0p5_0p3.png" class="w45" style="clip-path: inset(10% 0% 0% 0%);" />
+    <img src="data/gifs/tsne2d_states_by_file_kde_marginals_1p0_0p05.png" class="w45" style="clip-path: inset(10% 0% 0% 0%);" />
+  </p>
+
+  <p>
+    We observe that this difference in state distributions causes different expert subpolicies to be activated by the router over the course of the episode. This indicates that the MoE architecture implicitly understands how different mode dynamics affect the policy to be used, despite not receiving mode information. As a result, it draws on information from additional experts as the difficulty of the environment context increases (lower friction modes in this example).
+  </p>
+
+  <p class="center row">
+  <img src="data/gifs/expert_activation_by_friction.png" style="width:65%; max-width:700px;" />
+</p>
+
+
+  <h2>Code</h2>
+  <p>We will make our code publicly available.</p>
+
+</main>
+</body>
+</html>

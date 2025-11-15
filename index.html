@@ -70,11 +70,42 @@
     <section class="research-list">
     <h2>Research</h2>
 
-    <article class="research-item" aria-labelledby="moediff-title">
+    <article class="research-item" aria-labelledby="sacmoe-title">
+        <video class="autoplay no-controls" preload="metadata" width="230" height="330" alt="SAC-MoE performance visualizations"
+        autoplay muted loop playsinline aria-describedby="sacmoe-caption">
+            <source src="videos/sacmoe_website_teaser.mp4" type="video/mp4">
+            Sorry, your browser doesn’t support embedded videos. 
+        </video>
+        <div class="research-body">
+        <h3 class="research-title" id="sacmoe-title">
+            SAC-MoE: Reinforcement Learning with Mixture-of-Experts for Control of Hybrid Dynamical Systems with Uncertainty
+        </h3>
+
+        <p class="research-authors">
+            Leroy D'Souza,
+            <a href="https://aku02.github.io/">Akash Karthikeyan</a>, <a href="https://yashpant.github.io/">Yash Vardhan Pant</a>,
+            <a href="https://uwaterloo.ca/embedded-software-group/people-profiles/sebastian-fischmeister">Sebastian Fischmeister</a>
+        </p>
+
+        <div class="research-venue">Under Review (ICRA 2026)</div>
+
+        <div class="badges">
+            <a class="badge" href="https://aku02.github.io/projects/moediff/">Paper (pre-print)</a>
+            <a class="badge" href="sacmoe_site/index.html">Project Page</a>
+            <a class="badge" href="https://aku02.github.io/projects/moediff/">Codebase</a>
+            <!-- <a class="badge" href="https://aair-lab.github.io/aia2025/slides/leroy_dsouza_aia25_poster.pdf">Poster</a> -->
+        </div>
+
+        <p class="research-abstract">
+            An SAC-based RL policy with an MoE actor to develop an adaptable and generalizable controller for hybrid systems with multi-modal dynamics. The video shows SAC-MoE controlling an autonomous racecar on a racetrack layout with changing friction coefficients (represented by varied colors).
+        </p>
+        </div>
+    </article>
+
+    <!-- <article class="research-item" aria-labelledby="moediff-title">
         <video class="autoplay no-controls" preload="metadata" width="230" height="330" alt="MoE-Diff control on unseen racetrack layout"
         autoplay muted loop playsinline aria-describedby="moediff-caption">
             <source src="videos/moediff_website_teaser.mp4" type="video/mp4">
-            <!-- Fallback -->
             Sorry, your browser doesn’t support embedded videos. 
         </video>
         <div class="research-body">
@@ -99,7 +130,7 @@
             An MoE-based energy-diffusion actor model for adaptable and generalizable control for systems with multi-modal dynamics. The video shows MoE-Diff controlling an autonomous racecar on an unseen racetrack layout with changing friction coefficients.
         </p>
         </div>
-    </article>
+    </article> -->
 
     <article class="research-item" aria-labelledby="tractgpmpchyb-title">
         <img src="images/final_mapping_demo.png" width="225" height="150" style="margin-top: 50px;" alt="Data-driven hybrid GP-MPC over changing environments with learned mapping" loading="lazy">
