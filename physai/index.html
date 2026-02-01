@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PhysAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- MathJax for LaTeX rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        processEscapes: true,
+        packages: {'[+]': ['ams']}
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --text: #1f2328;
+      --accent: #0b3d91;
+      --bg: #fafafa;
+      --card: #ffffff;
+    }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6; }
+    main { max-width: 980px; margin: 0 auto; padding: 1.25rem; }
+    h1 { font-size: 1.9rem; margin: 1.2rem 0 0.8rem; color: var(--accent); }
+    h2 { font-size: 1.5rem; margin: 1.3rem 0 0.6rem; color: var(--accent); }
+    h3, h4 { color: var(--accent); margin-top: 1rem; }
+    p { margin: 0.5rem 0; text-align: justify; }
+    ul { margin: 0.5rem 1.2rem; }
+    /* Keep card feel but minimal to avoid shifting */
+    section { background: var(--card); border-radius: 12px; padding: 1.1rem; margin: 1rem 0; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+
+    /* Preserve your original Markdown layout semantics */
+    .center { text-align: center; }
+
+    /* Media sizing — identical semantics to your widths */
+    img, video {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 8px;
+      /* very light shadow; reduce flicker/paint artifacts */
+      box-shadow: 0 0.5px 3px rgba(0,0,0,0.08);
+      margin: 0.25rem;
+      object-fit: contain;
+    }
+    .w45 { width: 45%; }
+    .w31 { width: 31%; }
+    .w80 { width: 80%; }
+
+    /* Make rows behave like your <p align="center"> blocks */
+    .row { text-align: center; }
+    /* Ensure videos auto-play inline consistently */
+    video { background: #000; }
+
+    /* Math blocks spacing */
+    .math-block { margin: 0.75rem 0; }
+
+    @media (max-width: 860px) {
+      .w45, .w31, .w80 { width: 95%; }
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <p class="center row">
+    <!-- GIF -> MP4 -->
+    <video src="data/ICRA2026_presentation.mp4" autoplay loop muted playsinline></video>
+  </p>
+
+
+
+</main>
+</body>
+</html>
